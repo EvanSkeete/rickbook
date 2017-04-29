@@ -2,6 +2,13 @@ import React from 'react'
 import Router from 'next/router'
 
 import { post } from 'api-utils.js'
+import {
+  FormInput,
+  LoginForm,
+  LoginPageContainer,
+  PageContainer,
+  SubmitButton
+} from 'base-components.js'
 
 const login = async (email, password) => {
   const res = await post('/login', { email, password })
@@ -13,23 +20,43 @@ const login = async (email, password) => {
   }
 }
 
-class LoginPage extends React.Component {
+class LoginFormContainer extends React.Component {
   constructor (props) {
     super(props)
-    this.email = ''
-    this.password = ''
+    this.email = null
+    this.password = null
   }
 
   render () {
-    return <form onSubmit={async (e) => {
+    return <LoginForm className='login-form' onSubmit={async (e) => {
       e.preventDefault()
+      console.log(this.email, this.password)
       login(this.email.value, this.password.value)
     }}>
-      <input name='email' type='text' ref={(elem) => { this.email = elem }} />
-      <input name='password' type='password' ref={(elem) => { this.password = elem }} />
-      <button type='submit'>Login</button>
-    </form>
+
+      <FormInput
+        name='email'
+        type='text'
+        innerRef={(elem) => { this.email = elem }}
+      />
+
+      <FormInput
+        name='password'
+        type='password'
+        innerRef={(elem) => { this.password = elem }} />
+
+      <SubmitButton type='submit'>login</SubmitButton>
+
+    </LoginForm>
   }
 }
+
+const LoginPage = () => (
+  <PageContainer>
+    <LoginPageContainer>
+      <LoginFormContainer />
+    </LoginPageContainer>
+  </PageContainer>
+)
 
 export default LoginPage

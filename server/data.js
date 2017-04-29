@@ -2,12 +2,12 @@ const USERS = {
   'rick@rick.com': {
     email: 'rick@rick.com',
     name: 'Rick Sanchez',
-    password: '123Password'
+    password: 'asdf'
   },
   'morty@morty.com': {
     email: 'morty@morty.com',
     name: 'Morty Sanchez',
-    password: '123Password'
+    password: 'asdf'
   }
 }
 

@@ -42,6 +42,8 @@ var _index2 = _interopRequireDefault(_index);
 
 var _apiUtils = require('../lib/api-utils.js');
 
+var _baseComponents = require('../client/base-components.js');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var _this = undefined,
@@ -79,34 +81,35 @@ var login = function () {
   };
 }();
 
-var LoginPage = function (_React$Component) {
-  (0, _inherits3.default)(LoginPage, _React$Component);
+var LoginFormContainer = function (_React$Component) {
+  (0, _inherits3.default)(LoginFormContainer, _React$Component);
 
-  function LoginPage(props) {
-    (0, _classCallCheck3.default)(this, LoginPage);
+  function LoginFormContainer(props) {
+    (0, _classCallCheck3.default)(this, LoginFormContainer);
 
-    var _this2 = (0, _possibleConstructorReturn3.default)(this, (LoginPage.__proto__ || (0, _getPrototypeOf2.default)(LoginPage)).call(this, props));
+    var _this2 = (0, _possibleConstructorReturn3.default)(this, (LoginFormContainer.__proto__ || (0, _getPrototypeOf2.default)(LoginFormContainer)).call(this, props));
 
-    _this2.email = '';
-    _this2.password = '';
+    _this2.email = null;
+    _this2.password = null;
     return _this2;
   }
 
-  (0, _createClass3.default)(LoginPage, [{
+  (0, _createClass3.default)(LoginFormContainer, [{
     key: 'render',
     value: function render() {
       var _this3 = this;
 
-      return _react2.default.createElement('form', { onSubmit: function () {
+      return _react2.default.createElement(_baseComponents.LoginForm, { className: 'login-form', onSubmit: function () {
           var _ref2 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee2(e) {
             return _regenerator2.default.wrap(function _callee2$(_context2) {
               while (1) {
                 switch (_context2.prev = _context2.next) {
                   case 0:
                     e.preventDefault();
+                    console.log(_this3.email, _this3.password);
                     login(_this3.email.value, _this3.password.value);
 
-                  case 2:
+                  case 3:
                   case 'end':
                     return _context2.stop();
                 }
@@ -119,29 +122,55 @@ var LoginPage = function (_React$Component) {
           };
         }(), __source: {
           fileName: _jsxFileName,
-          lineNumber: 24
+          lineNumber: 31
         }
-      }, _react2.default.createElement('input', { name: 'email', type: 'text', ref: function ref(elem) {
+      }, _react2.default.createElement(_baseComponents.FormInput, {
+        name: 'email',
+        type: 'text',
+        innerRef: function innerRef(elem) {
           _this3.email = elem;
-        }, __source: {
+        },
+        __source: {
           fileName: _jsxFileName,
-          lineNumber: 28
+          lineNumber: 37
         }
-      }), _react2.default.createElement('input', { name: 'password', type: 'password', ref: function ref(elem) {
+      }), _react2.default.createElement(_baseComponents.FormInput, {
+        name: 'password',
+        type: 'password',
+        innerRef: function innerRef(elem) {
           _this3.password = elem;
         }, __source: {
           fileName: _jsxFileName,
-          lineNumber: 29
+          lineNumber: 43
         }
-      }), _react2.default.createElement('button', { type: 'submit', __source: {
+      }), _react2.default.createElement(_baseComponents.SubmitButton, { type: 'submit', __source: {
           fileName: _jsxFileName,
-          lineNumber: 30
+          lineNumber: 48
         }
-      }, 'Login'));
+      }, 'login'));
     }
   }]);
 
-  return LoginPage;
+  return LoginFormContainer;
 }(_react2.default.Component);
+
+var LoginPage = function LoginPage() {
+  return _react2.default.createElement(_baseComponents.PageContainer, {
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 55
+    }
+  }, _react2.default.createElement(_baseComponents.LoginPageContainer, {
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 56
+    }
+  }, _react2.default.createElement(LoginFormContainer, {
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 57
+    }
+  })));
+};
 
 exports.default = LoginPage;

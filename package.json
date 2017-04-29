@@ -1,0 +1,37 @@
+{
+  "name": "rickbook",
+  "version": "1.0.0",
+  "description": "A social network for Rick's and their friends",
+  "main": "index.js",
+  "scripts": {
+    "dev": "NODE_ENV=development node server.js",
+    "build": "next build",
+    "start": "NODE_ENV=production node server.js"
+  },
+  "keywords": [
+    "wubalubadubdub"
+  ],
+  "author": "Evan Skeete",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.15.2",
+    "fetch": "^1.1.0",
+    "fetch-ponyfill": "^4.0.0",
+    "next": "^2.3.0-alpha1",
+    "prop-types": "^15.5.8",
+    "react": "^15.5.4",
+    "react-dom": "^15.5.4"
+  },
+  "devDependencies": {
+    "babel-plugin-module-resolver": "^2.7.0",
+    "body-parser": "^1.17.1",
+    "eslint": "^3.19.0",
+    "eslint-config-standard": "^10.2.1",
+    "eslint-config-standard-react": "^5.0.0",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-node": "^4.2.2",
+    "eslint-plugin-promise": "^3.5.0",
+    "eslint-plugin-react": "^6.10.3",
+    "eslint-plugin-standard": "^3.0.1"
+  }
+}

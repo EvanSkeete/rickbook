@@ -1,13 +1,8 @@
 import React from 'react'
 import Document, { Head, Main, NextScript } from 'next/document'
 import styleSheet from 'styled-components/lib/models/StyleSheet'
-import styled from 'styled-components'
 
-const Body = styled.body`
-  margin: 0;
-  font-family: "Helvetica Nueue", Helvetica, Arial, sans-serif;
-  font-weight: 300;
-`
+import { Body } from 'base-components.js'
 
 export default class MyDocument extends Document {
   static async getInitialProps ({ renderPage }) {

@@ -14,7 +14,15 @@ const USERS = {
 const POSTS = [{
   from: 'rick@rick.com',
   to: null,
-  content: 'wassup'
+  content: 'You know what a vole is, Morty? You know what a vole is? Oh I say good sir, oh harumph, ohh a bope-a-dope-o-bobo. Oh, I\'m sorry Morty, are you the scientist or are you the kid who wanted to get laid? Lookin\' good!'
+}, {
+  from: 'rick@rick.com',
+  to: null,
+  content: 'Yea and I made the stars that became the carbon in your mothers ovaries! It\'s a dream, Morty! We\'re in your dog\'s dream.'
+}, {
+  from: 'rick@rick.com',
+  to: 'morty@morty.com',
+  content: 'Blah blah blah'
 }]
 
 module.exports = {

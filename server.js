@@ -12,6 +12,7 @@ app.prepare()
 .then(() => {
   const server = express()
   server.use(bodyParser.json())
+  server.use(express.static('static'))
 
   server.post('/login', (req, res) => {
     const { email, password } = req.body
@@ -20,12 +21,18 @@ app.prepare()
   })
 
   server.post('/posts', (req, res) => {
-    POSTS.push(req.body)
+    const { from, to, content } = req.body
+    POSTS.unshift({
+      to: to || null,
+      from: from || null,
+      content: content || null
+    })
     return res.sendStatus(200)
   })
 
   server.get('/posts', (req, res) => {
-    return res.send(POSTS)
+    const user = req.query.user
+    return res.send(POSTS.filter((post) => user ? (post.to === user || post.to === null) : post))
   })
 
   server.get('*', (req, res) => {

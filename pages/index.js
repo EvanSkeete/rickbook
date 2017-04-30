@@ -5,6 +5,7 @@ import { post } from 'api-utils.js'
 import {
   FormInput,
   LoginForm,
+  LoginImage,
   LoginPageContainer,
   PageContainer,
   SubmitButton
@@ -15,7 +16,8 @@ const login = async (email, password) => {
 
   if (res.ok) {
     Router.push({
-      pathname: '/feed'
+      pathname: '/feed',
+      query: { user: email }
     })
   }
 }
@@ -28,22 +30,26 @@ class LoginFormContainer extends React.Component {
   }
 
   render () {
-    return <LoginForm className='login-form' onSubmit={async (e) => {
+    return <LoginForm onSubmit={async (e) => {
       e.preventDefault()
-      console.log(this.email, this.password)
       login(this.email.value, this.password.value)
     }}>
+
+      <LoginImage src='/static/rick.png' width='200px' height='200px' />
 
       <FormInput
         name='email'
         type='text'
         innerRef={(elem) => { this.email = elem }}
+        placeholder='email'
       />
 
       <FormInput
         name='password'
         type='password'
-        innerRef={(elem) => { this.password = elem }} />
+        innerRef={(elem) => { this.password = elem }}
+        placeholder='password'
+      />
 
       <SubmitButton type='submit'>login</SubmitButton>
 

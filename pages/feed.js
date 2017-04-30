@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import Router from 'next/router'
+import withRedux from 'next-redux-wrapper'
+import { connect } from 'react-redux'
 
 import { get, post } from 'api-utils.js'
 import {
@@ -15,6 +17,7 @@ import {
   PostsList,
   SubmitButton
 } from 'base-components.js'
+import { initStore } from 'store.js'
 
 const sendPost = async (from, content) => {
   const res = await post('/posts', { from, content })
@@ -28,14 +31,18 @@ const sendPost = async (from, content) => {
   }
 }
 
-const Posts = ({ posts }) => (
+const Posts = connect(
+  (state) => ({
+    posts: state.posts
+  })
+)(({ posts }) => (
   <PostsList>{posts.map((post, index) => (
     <PostListItem key={index} isPrivate={!!post.to}>
       <PostListItemHeader>{post.from} {post.to && <span>> {post.to}</span>}</PostListItemHeader>
       <p>{post.content}</p>
     </PostListItem>
   ))}</PostsList>
-)
+))
 
 Posts.propTypes = {
   posts: PropTypes.array
@@ -72,14 +79,23 @@ NewPostFormContainer.propTypes = {
 }
 
 class FeedPage extends React.Component {
-  static async getInitialProps ({ query }) {
+  static async getInitialProps ({ store, isServer, query }) {
+    const { getState, dispatch } = store
+    const state = getState()
     const user = query.user
-    const posts = await get(`http://localhost:3000/posts?user=${user}`)
-    return { posts: await posts.json(), user }
+
+    let { posts } = state
+
+    if (!posts.length) {
+      posts = await get(`http://localhost:3000/posts`)
+      dispatch({ type: 'SET_POSTS', payload: await posts.json() })
+    }
+
+    return { user }
   }
 
   render () {
-    const { posts, user } = this.props
+    const { user } = this.props
 
     return <PageContainer>
       <Header>
@@ -88,15 +104,14 @@ class FeedPage extends React.Component {
       </Header>
       <ContentContainer>
         <NewPostFormContainer user={user} />
-        <Posts posts={posts} />
+        <Posts />
       </ContentContainer>
     </PageContainer>
   }
 }
 
 FeedPage.propTypes = {
-  posts: PropTypes.array,
   user: PropTypes.string
 }
 
-export default FeedPage
+export default withRedux(initStore)(FeedPage)

@@ -1,5 +1,8 @@
 import React from 'react'
 import Router from 'next/router'
+import withRedux from 'next-redux-wrapper'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 
 import { post } from 'api-utils.js'
 import {
@@ -10,17 +13,7 @@ import {
   PageContainer,
   SubmitButton
 } from 'base-components.js'
-
-const login = async (email, password) => {
-  const res = await post('/login', { email, password })
-
-  if (res.ok) {
-    Router.push({
-      pathname: '/feed',
-      query: { user: email }
-    })
-  }
-}
+import { initStore } from 'store.js'
 
 class LoginFormContainer extends React.Component {
   constructor (props) {
@@ -30,9 +23,16 @@ class LoginFormContainer extends React.Component {
   }
 
   render () {
+    const { login } = this.props
+
     return <LoginForm onSubmit={async (e) => {
       e.preventDefault()
-      login(this.email.value, this.password.value)
+
+      const email = this.email.value
+      const password = this.password.value
+      const success = await login(email, password)
+
+      if (success) { Router.push({ pathname: '/feed' }) }
     }}>
 
       <LoginImage src='/static/rick.png' width='200px' height='200px' />
@@ -57,12 +57,24 @@ class LoginFormContainer extends React.Component {
   }
 }
 
+LoginFormContainer.propTypes = {
+  login: PropTypes.func.isRequired
+}
+
+const ConnectedLoginFormContainer = connect(null, (dispatch) => ({
+  login: async (email, password) => {
+    const res = await post('/login', { email, password })
+    if (res.ok) { dispatch({ type: 'LOGIN', payload: email }) }
+    return res.ok
+  }
+}))(LoginFormContainer)
+
 const LoginPage = () => (
   <PageContainer>
     <LoginPageContainer>
-      <LoginFormContainer />
+      <ConnectedLoginFormContainer />
     </LoginPageContainer>
   </PageContainer>
 )
 
-export default LoginPage
+export default withRedux(initStore)(LoginPage)

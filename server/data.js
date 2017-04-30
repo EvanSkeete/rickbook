@@ -22,7 +22,11 @@ const POSTS = [{
 }, {
   from: 'rick@rick.com',
   to: 'morty@morty.com',
-  content: 'Blah blah blah'
+  content: 'Wubalubaduddub'
+}, {
+  from: 'morty@morty.com',
+  to: 'rick@rick.com',
+  content: 'Rick you\'re a dick'
 }]
 
 module.exports = {

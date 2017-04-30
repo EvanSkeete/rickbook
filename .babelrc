@@ -1,4 +1,4 @@
 {
   "presets": ["next/babel"],
-  "plugins": [["module-resolver", { "root": ["client", "lib"] }]]
+  "plugins": [["transform-decorators-legacy"], ["module-resolver", { "root": ["client", "lib"] }]]
 }

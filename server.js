@@ -7,7 +7,7 @@ const app = next({ dev })
 const handle = app.getRequestHandler()
 
 const { USERS, POSTS } = require('./server/data.js')
-let isLoggedInAs = null
+let currentLoggedInUser = null
 
 app.prepare()
 .then(() => {
@@ -16,14 +16,14 @@ app.prepare()
   server.use(express.static('static'))
 
   server.get('/login', (req, res) => {
-    res.send(isLoggedInAs)
+    res.send({ user: currentLoggedInUser })
   })
 
   server.post('/login', (req, res) => {
     const { email, password } = req.body
     const user = USERS[email]
     if (user && user.password === password) {
-      isLoggedInAs = email
+      currentLoggedInUser = email
       res.sendStatus(200)
     } else {
       res.sendStatus(401)
@@ -41,7 +41,15 @@ app.prepare()
   })
 
   server.get('/posts', (req, res) => {
-    return res.send(POSTS.filter((post) => isLoggedInAs ? (post.to === isLoggedInAs || post.to === null) : post))
+    return res.send(POSTS.filter(
+      (post) => currentLoggedInUser
+        ? (post.to === currentLoggedInUser || post.to === null)
+        : post
+    ))
+  })
+
+  server.get('/users', (req, res) => {
+    res.send(USERS)
   })
 
   server.get('*', (req, res) => {

@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import Router from 'next/router'
 import withRedux from 'next-redux-wrapper'
 import { connect } from 'react-redux'
 
@@ -12,36 +11,40 @@ import {
   HeaderImage,
   NewPostForm,
   PageContainer,
+  PostContentContainer,
   PostListItem,
   PostListItemHeader,
+  PostListItemImage,
+  PostListItemImagePlaceholder,
   PostsList,
   SubmitButton
 } from 'base-components.js'
 import { initStore } from 'store.js'
 
-const sendPost = async (from, content) => {
-  const res = await post('/posts', { from, content })
-
-  // We're gonna get rid of this hack soon enough
-  if (res.ok) {
-    Router.push({
-      pathname: '/feed',
-      query: { user: from }
-    })
-  }
-}
-
 const Posts = connect(
   (state) => ({
-    posts: state.posts
+    posts: state.posts,
+    users: state.users
   })
-)(({ posts }) => (
-  <PostsList>{posts.map((post, index) => (
-    <PostListItem key={index} isPrivate={!!post.to}>
-      <PostListItemHeader>{post.from} {post.to && <span>> {post.to}</span>}</PostListItemHeader>
-      <p>{post.content}</p>
+)(({ posts, users }) => (
+  <PostsList>{posts.map((post, index) => {
+    // Get the user data for the from and to users
+    const from = users[post.from]
+    const to = users[post.to]
+
+    // Get some data to display
+    const img = from && from.img
+    const fromName = from ? from.name : post.from
+    const toName = to ? to.name : post.to
+
+    return <PostListItem key={index} isPrivate={!!post.to}>
+      { img ? <PostListItemImage src={`/static/${img}`} /> : <PostListItemImagePlaceholder />}
+      <PostContentContainer>
+        <PostListItemHeader>{fromName} {toName && <span>> {toName}</span>}</PostListItemHeader>
+        <p>{post.content}</p>
+      </PostContentContainer>
     </PostListItem>
-  ))}</PostsList>
+  })}</PostsList>
 ))
 
 Posts.propTypes = {
@@ -55,9 +58,14 @@ class NewPostFormContainer extends React.Component {
   }
 
   render () {
-    return <NewPostForm onSubmit={(e) => {
+    return <NewPostForm onSubmit={async (e) => {
       e.preventDefault()
-      sendPost(this.props.user, this.newPostTextArea.value)
+
+      const { user, addPost } = this.props
+      const content = this.newPostTextArea.value
+      if (!content) return
+      await post('/posts', { from: user, content })
+      addPost({ from: user, to: null, content })
       this.newPostTextArea.value = ''
     }}>
 
@@ -75,35 +83,65 @@ class NewPostFormContainer extends React.Component {
 }
 
 NewPostFormContainer.propTypes = {
-  user: PropTypes.string
+  user: PropTypes.string,
+  addPost: PropTypes.func
 }
+
+const ConnectedNewPostFormContainer = connect(
+  // connnect state
+  (state) => ({
+    user: state.currentLoggedInUser
+  }),
+  // connect dispatch
+  (dispatch) => ({
+    addPost: (post) => {
+      dispatch({ type: 'ADD_POST', payload: post })
+    }
+  })
+)(NewPostFormContainer)
 
 class FeedPage extends React.Component {
   static async getInitialProps ({ store, isServer, query }) {
     const { getState, dispatch } = store
-    const state = getState()
-    const user = query.user
+    const { posts, currentLoggedInUser } = getState()
+    let res
 
-    let { posts } = state
-
-    if (!posts.length) {
-      posts = await get(`http://localhost:3000/posts`)
-      dispatch({ type: 'SET_POSTS', payload: await posts.json() })
+    if (!currentLoggedInUser) {
+      res = await get(`http://localhost:3000/login`)
+      res.ok && dispatch({ type: 'LOGIN', payload: (await res.json()).user })
     }
 
-    return { user }
+    if (!posts.length) {
+      res = await get(`http://localhost:3000/posts`)
+      res.ok && dispatch({ type: 'SET_POSTS', payload: await res.json() })
+    }
+  }
+
+  componentWillMount () {
+    this.componentWillReceiveProps(this.props)
+  }
+
+  async componentWillReceiveProps (props) {
+    const { users, setUsers } = props
+    if (!Object.keys(users).length) {
+      const res = await get(`http://localhost:3000/users`)
+      res.ok && setUsers(await res.json())
+    }
   }
 
   render () {
-    const { user } = this.props
+    const { currentLoggedInUser, users } = this.props
+    const currentUser = currentLoggedInUser && users[currentLoggedInUser]
+    const img = currentUser ? currentUser.img : 'rick.png'
+    const name = currentUser ? currentUser.name : 'Rick'
 
     return <PageContainer>
       <Header>
-        <h1>Rickbook</h1>
-        <HeaderImage src='/static/rick.png' width='150px' height='150px' />
+        <HeaderImage src={`/static/${img}`} width='150px' height='150px' />
+        <h1>{name}book</h1>
       </Header>
       <ContentContainer>
-        <NewPostFormContainer user={user} />
+        <ConnectedNewPostFormContainer />
         <Posts />
       </ContentContainer>
     </PageContainer>
@@ -111,7 +149,22 @@ class FeedPage extends React.Component {
 }
 
 FeedPage.propTypes = {
-  user: PropTypes.string
+  currentLoggedInUser: PropTypes.string,
+  users: PropTypes.object
 }
 
-export default withRedux(initStore)(FeedPage)
+const ConnectedFeedPage = connect(
+  // connect state
+  (state) => ({
+    currentLoggedInUser: state.currentLoggedInUser,
+    users: state.users
+  }),
+  // connect dispatch
+  (dispatch) => ({
+    setUsers: (users) => {
+      dispatch({ type: 'SET_USERS', payload: users })
+    }
+  })
+)(FeedPage)
+
+export default withRedux(initStore)(ConnectedFeedPage)

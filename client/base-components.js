@@ -30,17 +30,25 @@ export const Header = styled.header`
   background: ${COLORS.FB_BLUE_LIGHTEST};
   color: ${COLORS.FB_BLUE_DARK}
   display: flex;
-  flex-direction: column;
   font-size: 3rem;
   height: 240px;
   justify-content: center;
   position: relative;
+
+  h1 {
+    font-size: 4rem;
+  }
 `
 
 export const HeaderImage = styled.img`
+  background-color: #f7f7f7;
+  border-radius: 100px;
+  border: 10px solid #fff;
+  box-shadow: 1px 1px 5px rgba(51, 51, 51, 0.22);
+  height: 150px;
+  left: 5%;
   position: absolute;
-  bottom: 0;
-  right: 5%;
+  width: 150px;
 `
 
 export const ViewportContainer = styled.div`
@@ -164,38 +172,70 @@ export const FormTextArea = styled.textarea`
 `
 
 export const PostsList = styled.ol`
-  align-items: center;
+  align-items: flex-end;
+  justify-content: flex-end;
   display: flex;
   flex-direction: column;
   flex: 1;
   margin: 0;
   padding: 0;
+  width: 90%;
 `
 
 export const PostListItem = styled.li`
   ${BORDER_RADIUS}
+  align-items: center;
   background-color: ${COLORS.WHITE}
   border: 1px solid ${COLORS.GREY_DARK}
   box-sizing: border-box;
   color: ${COLORS.GREY_DARKEST}
+  display:flex;
+  font-size: 1.2rem;
   line-height: 1.5rem;
   list-style: none;
   margin-bottom: 2rem;
-  padding: 2rem;
-  width: 90%;
-  position: relative;
   overflow: hidden;
-  font-size: 1.2rem;
+  overflow: visible;
+  padding: 2rem 2rem 2rem 0;
+  position: relative;
+  width: calc(100% - 50px);
+
   ::after {
     background-color: ${COLORS.FB_BLUE_DARK}
     content: '';
     display: ${props => props.isPrivate ? 'block' : 'none'}
     height: 100%;
-    left: 0;
     position: absolute;
+    right: 0;
     top:0;
     width: 5px;
   }
+`
+export const PostListItemImage = styled.img`
+  background-color: ${COLORS.WHITE}
+  border-radius: 100px;
+  border: 10px solid #fff;
+  box-shadow: 1px 1px 5px rgba(51, 51, 51, 0.22)
+  height: 100px;
+  width: 100px;
+  margin-left: -50px;
+`
+
+export const PostListItemImagePlaceholder = styled.div`
+  background-color: ${COLORS.WHITE}
+  border-radius: 100px;
+  border: 10px solid #fff;
+  box-shadow: 1px 1px 5px rgba(51, 51, 51, 0.22)
+  height: 100px;
+  width: 100px;
+  margin-left: -50px;
+  flex: 0 0 auto;
+`
+
+export const PostContentContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding-left: 2rem;
 `
 
 export const PostListItemHeader = styled.p`

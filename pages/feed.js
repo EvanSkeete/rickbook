@@ -38,7 +38,7 @@ const Posts = connect(
     const toName = to ? to.name : post.to
 
     return <PostListItem key={index} isPrivate={!!post.to}>
-      { img ? <PostListItemImage src={`/static/${img}`} /> : <PostListItemImagePlaceholder />}
+      { img ? <PostListItemImage src={`/static/${img}`} width='100px' height='100px' /> : <PostListItemImagePlaceholder />}
       <PostContentContainer>
         <PostListItemHeader>{fromName} {toName && <span>> {toName}</span>}</PostListItemHeader>
         <p>{post.content}</p>

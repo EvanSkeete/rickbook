@@ -1,8 +1,9 @@
+import Link from 'next/link'
+import PropTypes from 'prop-types'
 import React from 'react'
 import Router from 'next/router'
 import withRedux from 'next-redux-wrapper'
 import { connect } from 'react-redux'
-import PropTypes from 'prop-types'
 
 import { post } from 'api-utils.js'
 import {
@@ -73,6 +74,7 @@ const LoginPage = () => (
   <PageContainer>
     <LoginPageContainer>
       <ConnectedLoginFormContainer />
+      <Link href='/about' prefetch><a>About</a></Link>
     </LoginPageContainer>
   </PageContainer>
 )

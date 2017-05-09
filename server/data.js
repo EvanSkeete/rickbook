@@ -65,7 +65,7 @@ const POSTS = [
   {
     from: 'beth@beth.com',
     to: 'jerry@jerry.com',
-    content: 'He\'s not a hot girl. He can\'t just bail on his life and set up shop in someone else\'s.'
+    content: 'Morty\'s not a hot girl. He can\'t just bail on his life and set up shop in someone else\'s.'
   },
   {
     from: 'summer@summer.com',

@@ -219,6 +219,7 @@ export const PostListItemImage = styled.img`
   height: 100px;
   width: 100px;
   margin-left: -50px;
+  flex: 0 0 auto;
 `
 
 export const PostListItemImagePlaceholder = styled.div`

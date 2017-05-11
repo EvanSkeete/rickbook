@@ -6,8 +6,11 @@ const dev = process.env.NODE_ENV !== 'production'
 const app = next({ dev })
 const handle = app.getRequestHandler()
 
-const { USERS, POSTS } = require('./server/data.js')
-let currentLoggedInUser = null
+const DATA = require('./server/data.js')
+const USERS = DATA.USERS
+const POSTS = DATA.POSTS
+
+var currentLoggedInUser = null
 
 app.prepare()
 .then(() => {
@@ -20,7 +23,8 @@ app.prepare()
   })
 
   server.post('/login', (req, res) => {
-    const { email, password } = req.body
+    const email = req.body.email
+    const password = req.body.password
     const user = USERS[email]
     if (user && user.password === password) {
       currentLoggedInUser = email
@@ -31,7 +35,10 @@ app.prepare()
   })
 
   server.post('/posts', (req, res) => {
-    const { from, to, content } = req.body
+    const from = req.body.from
+    const to = req.body.to
+    const content = req.body.content
+
     POSTS.unshift({
       to: to || null,
       from: from || null,

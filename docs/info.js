@@ -4,6 +4,8 @@
 *
 *        Framework for server-rendered React apps
 *
+*        http://slides.com/evanskeete-1/next-js
+*
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 
